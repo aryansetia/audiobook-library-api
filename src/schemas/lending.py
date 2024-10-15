@@ -1,12 +1,13 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime  import datetime
+from datetime import datetime
 
-class LendCreate(BaseModel):
+# Schema for creating a lending record
+class LendingCreate(BaseModel):
     audiobook_id: int
-    user_id: int
-    due_date: datetime
+    due_date: Optional[datetime] = None  # Can be optional
 
+# Schema for the response after lending creation
 class LendingResponse(BaseModel):
     id: int
     audiobook_id: int

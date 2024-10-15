@@ -12,6 +12,7 @@ class AudiobookUpdate(BaseModel):
     title: Optional[str] = None
     author: Optional[str] = None
     duration: Optional[str] = None
+    is_available: Optional[bool] = None
     cover_image_url: Optional[str] = None
 
 class AudiobookResponse(BaseModel):

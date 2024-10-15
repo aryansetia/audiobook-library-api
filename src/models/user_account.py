@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Integer, Boolean, DateTime
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from pytz import timezone
@@ -12,6 +12,7 @@ class User(Base):
     username = Column(String, index=True, nullable=False)
     email = Column(String, index=True, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.now(IST))
+    created_at = Column(DateTime, default=lambda: datetime.now(IST))
 
-    lends = relationship("Lending", back_populates="user")
+    lending = relationship("Lending", back_populates="user")
+    request_queue = relationship("RequestQueue", back_populates="user")

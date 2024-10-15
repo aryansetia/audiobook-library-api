@@ -21,6 +21,8 @@ venv
 docs.zip
 archive.zip
 app.sqlite
+src/.env
+src/.env
 
 # vim temporary files
 *~
