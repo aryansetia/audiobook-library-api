@@ -15,13 +15,19 @@ The project utilizes the following technologies:
 To run this project, you need to have Docker and Docker Compose installed on your machine. 
 
 1. Clone the repository
-2. Run the following command to start the project:
+2. Build the docker image
 ```bash
-docker-compose up --build
+docker build -t my-fastapi-app .
+
 ```
-3. The FastAPI server will be running on `http://localhost:8000`
-4. Go to `http://localhost:8000/login` and enter the hardcoded username: `john_doe` and password: `1234` to get the JWT token.
-5. Pass this token in the Authorization header as a Bearer token to access the protected routes.   
+3. Run the docker container 
+```bash
+docker run -d -p 8000:8000 --name my-fastapi-container my-fastapi-app
+```
+4. The FastAPI server will be running on `http://localhost:8000`
+5. Go to `localhost:8000/users/register` and register yourself with username and password. 
+6. Now go to `localhost:8000/token` and enter your credentials to get the access token.
+7. Pass this token in the Authorization header as a Bearer token to access the protected routes.   
 
 ## API Documentation
 The API documentation can be accessed at `http://localhost:8000/docs`
