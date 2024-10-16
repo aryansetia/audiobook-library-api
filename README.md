@@ -36,6 +36,15 @@ docker run -d -p 8000:8000 --name my-fastapi-container my-fastapi-app
 7. Now go to `localhost:8000/token` and enter your credentials to get the access token.
 8. Pass this token in the Authorization header as a Bearer token to access the protected routes.   
 
+## Tests
+To run the test cases, first create a virtual environment and install all the requirements using 
+```bash
+pip install -r requirements.txt
+```
+Use this command to run the test cases for audiobook APIs
+```bash
+pytest tests/test_audiobook.py
+```
 ## API Documentation
 The API documentation can be accessed at `http://localhost:8000/docs`
 
