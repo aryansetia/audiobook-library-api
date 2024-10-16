@@ -52,7 +52,6 @@ def lend_audiobook(audiobook_id: int = Query(..., description="ID of the audiobo
 
 @router.get("/lend/history", response_model=List[LendingResponse], status_code=status.HTTP_200_OK)
 def get_lending_history(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    # Fetch lending history for the logged-in user
     lending_history = db.query(Lending).filter(Lending.user_id == current_user.id).all()
 
     if not lending_history:

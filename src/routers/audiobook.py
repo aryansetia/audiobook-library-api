@@ -25,10 +25,7 @@ def create_audiobook(audiobook: AudiobookCreate, db: Session = Depends(get_db),
     try:
         db.add(db_audiobook)
         db.commit()
-        response_data = {
-            "message": "Audiobook created successfully",
-        }
-        return JSONResponse(content=response_data, status_code=status.HTTP_201_CREATED)
+        return db_audiobook
     except IntegrityError as e:
         db.rollback()
         raise HTTPException(

@@ -16,6 +16,7 @@ class AudiobookUpdate(BaseModel):
     cover_image_url: Optional[str] = Field(None, description="The new URL of the audiobook's cover image, if it needs to be updated.", example="http://example.com/gatsby_special.jpg")
 
 class AudiobookResponse(BaseModel):
+    id: int = Field(..., description="The ID of the audio book.")
     title: str = Field(..., description="The title of the audiobook.", example="The Great Gatsby")
     author: str = Field(..., description="The author of the audiobook.", example="F. Scott Fitzgerald")
     duration: int = Field(..., description="The duration of the audiobook in minutes.", example=300)
