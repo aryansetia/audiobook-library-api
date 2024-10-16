@@ -92,3 +92,41 @@ def get_audiobook_queue(audiobook_id: int, db: Session = Depends(get_db),
     print(f"Queue for audiobook '{audiobook.title}' retrieved: {queue}")
 
     return queue
+
+
+@router.post("/lend/return", status_code=status.HTTP_200_OK)
+def return_audiobook(
+    audiobook_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    audiobook = db.query(Audiobook).filter(Audiobook.id == audiobook_id).first()
+
+    if audiobook is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Audiobook not found"
+        )
+
+    user_request = db.query(RequestQueue).filter(
+        RequestQueue.audiobook_id == audiobook_id,
+        RequestQueue.user_id == current_user.id
+    ).first()
+
+    if user_request is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not authorized to return this audiobook"
+        )
+
+    if not q_manager.is_queue_empty(audiobook_id):
+        next_user_id = q_manager.remove_from_queue(audiobook_id)
+        print(f"Notifying user {next_user_id} that audiobook '{audiobook.title}' is now available.")
+
+    else:
+        audiobook.is_available = True
+        db.commit()
+        print(f"Audiobook '{audiobook.title}' is now available for all users.")
+
+    return {"message": f"Audiobook '{audiobook.title}' returned successfully."}
+
