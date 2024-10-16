@@ -1,11 +1,11 @@
-from fastapi import Depends, HTTPException, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter, Query
 from sqlalchemy.orm import Session
 from datetime import datetime
 from src.schemas.lending import LendingResponse, LendingCreate
 from src.database import get_db
 from src.models.user_account import User
 from src.models.lending import Lending
-from src.models.request_queue import RequestQueue
+from src.schemas.request_queue import RequestQueueResponse, RequestQueueCreate, RequestQueueListResponse
 from src.models.audiobook import Audiobook
 from src.authentication.auth import get_current_user
 from datetime import timedelta
@@ -16,8 +16,9 @@ router = APIRouter()
 
 
 @router.post("/lend", response_model=LendingResponse)
-def lend_audiobook(lending: LendingCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    audiobook = db.query(Audiobook).filter(Audiobook.id == lending.audiobook_id).first()
+def lend_audiobook(audiobook_id: int = Query(..., description="ID of the audiobook to lend"), db: Session = Depends(get_db),
+                   current_user: User = Depends(get_current_user)):
+    audiobook = db.query(Audiobook).filter(Audiobook.id == audiobook_id).first()
 
     if not audiobook:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Audiobook not found")
@@ -33,7 +34,7 @@ def lend_audiobook(lending: LendingCreate, db: Session = Depends(get_db), curren
 
     # Create a new lending record
     new_lending = Lending(
-        audiobook_id=lending.audiobook_id,
+        audiobook_id=audiobook_id,
         user_id=current_user.id,
         borrowed_at=borrowed_at,
         due_date=due_date,
@@ -58,5 +59,3 @@ def get_lending_history(current_user: User = Depends(get_current_user), db: Sess
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No lending history found.")
 
     return lending_history
-
-
